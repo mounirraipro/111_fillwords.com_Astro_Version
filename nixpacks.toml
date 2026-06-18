@@ -1,7 +1,7 @@
 [variables]
 NIXPACKS_NODE_VERSION = "24"
-NIXPACKS_SPA_OUT_DIR = "dist"
 NPM_CONFIG_PRODUCTION = "false"
+SITE_ROOT = "/app/dist"
 
 [phases.setup]
 nixPkgs = ["...", "caddy"]
@@ -10,7 +10,7 @@ nixPkgs = ["...", "caddy"]
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["npm run build", "test -f /app/dist/index.html"]
 
 [start]
 cmd = "caddy run --config Caddyfile --adapter caddyfile"
