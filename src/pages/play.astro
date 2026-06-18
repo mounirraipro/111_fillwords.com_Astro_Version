@@ -1,0 +1,117 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import GameSideRail from "@/components/GameSideRail.astro";
+import { leftSideGames, rightSideGames } from "@/data/otherGames";
+import { siteConfig } from "@/data/siteConfig";
+
+const playSteps = [
+  ["1", "Scan", "Read the theme and look for short, obvious words."],
+  ["2", "Swipe", "Trace adjacent letters in the exact word order."],
+  ["3", "Clear", "Keep solving until every grid cell belongs to a found word."],
+];
+
+const tips = [
+  "Start with rare letters and short words.",
+  "Check endings such as ING, ED, ER, and LY.",
+  "Switch between row, column, and diagonal scans.",
+  "Use hints after narrowing the board to a few likely paths.",
+];
+---
+
+<BaseLayout
+  title={`Play ${siteConfig.name} Online`}
+  description={`Play ${siteConfig.name} online free in your browser. Swipe through letter grids, find hidden words, and solve themed word puzzles on desktop or mobile.`}
+>
+  <section class="play-stage" id="top">
+    <div class="play-stage-bg" aria-hidden="true"></div>
+    <div class="play-game-layout">
+      <GameSideRail games={leftSideGames} label="More games on the left" />
+      <div class="play-shell" data-game-shell>
+        <iframe src="/game/index.html" title="FillWords game" allow="autoplay; fullscreen *" allowfullscreen></iframe>
+        <div class="play-float-controls">
+          <button type="button" data-share-game aria-label="Share game">
+            <span>Share</span>
+          </button>
+          <button type="button" data-fullscreen-game aria-label="Fullscreen game">
+            <span>Fullscreen</span>
+          </button>
+        </div>
+      </div>
+      <GameSideRail games={rightSideGames} label="More games on the right" />
+    </div>
+  </section>
+
+  <section class="play-info-section">
+    <div class="play-info-head">
+      <p class="eyebrow">Play online</p>
+      <h1>FillWords in your browser.</h1>
+      <p>Free, instant, and built for quick word puzzle sessions.</p>
+    </div>
+    <div class="play-step-grid">
+      {playSteps.map(([number, title, text]) => (
+        <article>
+          <span>{number}</span>
+          <strong>{title}</strong>
+          <p>{text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="play-info-section play-split-section">
+    <div>
+      <p class="eyebrow">Game scope</p>
+      <p class="play-panel-title">200 levels across 10 themed collections.</p>
+      <p class="text-muted">Boards range from small beginner grids to larger challenge grids with longer words, denser paths, and more topic-specific vocabulary.</p>
+    </div>
+    <div class="play-tip-panel">
+      <p class="eyebrow">Tips</p>
+      <ul>
+        {tips.map((tip) => <li>{tip}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="play-info-section seo-copy-section" aria-labelledby="play-page-guide">
+    <div class="section-head">
+      <h2 id="play-page-guide">Play guide.</h2>
+    </div>
+    <div class="seo-copy-grid">
+      <article class="seo-copy-card seo-copy-wide">
+        <h3>What makes FillWords different</h3>
+        <p>FillWords is a swipe-based word puzzle. Every board gives you a set of hidden words and a grid of letters. Instead of typing guesses, you connect adjacent letters directly on the board. Correct paths lock in place, so progress stays visible as the unused letters become easier to reason about.</p>
+      </article>
+      <article class="seo-copy-card">
+        <h3>How to start a strong solve</h3>
+        <p>Read the theme first, then scan for short words, rare letters, and common endings. Once a few words are locked, use the remaining spaces to infer longer paths.</p>
+      </article>
+      <article class="seo-copy-card">
+        <h3>Best sessions</h3>
+        <p>Use smaller boards for quick breaks and larger boards when you want deeper focus. Progress is stored in the browser, so finish active sessions before clearing local storage or switching devices.</p>
+      </article>
+    </div>
+  </section>
+  <script is:inline>
+    (() => {
+      const shell = document.querySelector("[data-game-shell]");
+      const iframe = shell?.querySelector("iframe");
+      const fullscreen = document.querySelector("[data-fullscreen-game]");
+      const share = document.querySelector("[data-share-game]");
+      fullscreen?.addEventListener("click", async () => {
+        const active = document.fullscreenElement;
+        if (active) {
+          await document.exitFullscreen?.();
+          return;
+        }
+        await (iframe?.requestFullscreen?.() ?? shell?.requestFullscreen?.());
+      });
+      share?.addEventListener("click", async () => {
+        const data = { title: "FillWords", text: "Play FillWords online.", url: location.href };
+        try {
+          if (navigator.share) await navigator.share(data);
+          else await navigator.clipboard?.writeText(location.href);
+        } catch {}
+      });
+    })();
+  </script>
+</BaseLayout>

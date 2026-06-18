@@ -1,0 +1,161 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { externalGames, type ExternalGame } from "@/data/externalGames";
+import { brandAccentClass } from "@/data/accentClasses";
+import { Buffer } from "node:buffer";
+
+type Props = {
+  game: ExternalGame;
+};
+
+const { game } = Astro.props;
+const fillWordsCard = {
+  href: "/play/",
+  title: "FillWords Online",
+  shortTitle: "FillWords",
+  category: "Featured",
+  thumbnail: "/game-thumbs/fillwords-card.svg",
+  accent: "#0e7490",
+  accentClass: brandAccentClass,
+};
+const bentoGames = [
+  {
+    href: `/games/${game.slug}/`,
+    title: game.title,
+    shortTitle: game.shortTitle,
+    category: "Now playing",
+    thumbnail: game.thumbnail,
+    accent: game.accent,
+    accentClass: game.accentClass,
+  },
+  fillWordsCard,
+  ...externalGames
+    .filter((item) => item.slug !== game.slug)
+    .map((item) => ({
+      href: `/games/${item.slug}/`,
+      title: item.title,
+      shortTitle: item.shortTitle,
+      category: item.category,
+      thumbnail: item.thumbnail,
+      accent: item.accent,
+      accentClass: item.accentClass,
+    })),
+].slice(0, 8);
+const bentoGamesLeft = bentoGames.slice(0, 4);
+const bentoGamesRight = bentoGames.slice(4, 8);
+const gameSeoTitle = `Play ${game.shortTitle} Online - Free Browser Game`;
+const encodedIframeUrl = Buffer.from(game.iframeUrl, "utf8").toString("base64");
+const guideItems = [
+  { id: `${game.slug}-about`, label: "About", title: `About ${game.title}`, body: game.seoOverview },
+  { id: `${game.slug}-play`, label: "Rules", title: "How to play", body: game.howToPlay },
+  { id: `${game.slug}-strategy`, label: "Strategy", title: "Strategy", body: game.strategyGuide },
+];
+---
+
+<BaseLayout title={game.title} description={game.description} seo={{ path: `/games/${game.slug}`, seoTitle: gameSeoTitle }}>
+  <section class:list={["embedded-game-page", game.accentClass]}>
+    <header class="embedded-game-head">
+      <nav class="crumbs"><a href="/games/">Games</a><span>/</span><span>{game.category}</span></nav>
+      <h1>{game.title}</h1>
+      <p>{game.description}</p>
+    </header>
+
+    <div class="embedded-game-layout">
+      <div class="game-bento-grid game-bento-grid-side" aria-label="More games">
+        {bentoGamesLeft.map((item, index) => (
+          <a class:list={["game-bento-card", item.accentClass, { "game-bento-card-featured": index === 0 }]} href={item.href}>
+            <img src={item.thumbnail} alt={`${item.title} thumbnail`} width="640" height="360" loading="lazy" />
+            <div>
+              <span>{item.category}</span>
+              <strong>{item.shortTitle}</strong>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="embedded-game-frame" data-external-game data-game-code={encodedIframeUrl}>
+        <iframe src="about:blank" title={game.title} loading="lazy" allow="autoplay; fullscreen *" allowfullscreen data-external-game-frame></iframe>
+        <div class="embedded-game-loader" data-external-game-loader>
+          <img src={game.thumbnail} alt={`${game.title} thumbnail`} width="640" height="360" loading="eager" />
+          <div>
+            <span>{game.category}</span>
+            <strong>{game.title}</strong>
+            <button type="button" class="primary-action" data-load-external-game><span class="play-triangle"></span>Play game</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-bento-grid game-bento-grid-side" aria-label="Try next">
+        {bentoGamesRight.map((item, index) => (
+          <a class:list={["game-bento-card", item.accentClass, { "game-bento-card-featured": index === 0 }]} href={item.href}>
+            <img src={item.thumbnail} alt={`${item.title} thumbnail`} width="640" height="360" loading="lazy" />
+            <div>
+              <span>{item.category}</span>
+              <strong>{item.shortTitle}</strong>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <section class="game-guide-section" aria-labelledby={`${game.slug}-guide`}>
+      <aside class="game-guide-aside" aria-label={`${game.title} guide navigation`}>
+        <p>{game.category} guide</p>
+        {guideItems.map((item, index) => (
+          <a href={`#${item.id}`}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            {item.label}
+          </a>
+        ))}
+        <a href={`#${game.slug}-tips`}><span>04</span>Tips</a>
+      </aside>
+
+      <div class="game-guide-main">
+        <header class="game-guide-head">
+          <h2 id={`${game.slug}-guide`}>{game.title} guide</h2>
+          <p>Clear rules, practical strategy, and quick tips before you load the iframe.</p>
+        </header>
+
+        <div class="game-guide-flow">
+          {guideItems.map((item, index) => (
+            <article class="game-guide-block" id={item.id}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+            </article>
+          ))}
+
+          <article class="game-guide-tips" id={`${game.slug}-tips`}>
+            <div>
+              <span>04</span>
+              <h3>Player tips</h3>
+            </div>
+            <ul>
+              {game.playerTips.map((tip) => <li>{tip}</li>)}
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <script is:inline>
+    (() => {
+      document.querySelectorAll("[data-external-game]").forEach((root) => {
+        const frame = root.querySelector("[data-external-game-frame]");
+        const loader = root.querySelector("[data-external-game-loader]");
+        const button = root.querySelector("[data-load-external-game]");
+        button?.addEventListener("click", () => {
+          const encoded = root.getAttribute("data-game-code");
+          if (!encoded || !frame || frame.getAttribute("src") !== "about:blank") return;
+          frame.setAttribute("src", atob(encoded));
+          frame.setAttribute("loading", "eager");
+          root.classList.add("is-loaded");
+          loader?.setAttribute("aria-hidden", "true");
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

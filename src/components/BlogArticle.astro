@@ -1,0 +1,205 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { articles, type Article } from "@/data/articles";
+import { siteConfig } from "@/data/siteConfig";
+
+type Props = {
+  article: Article;
+};
+
+const { article } = Astro.props;
+const published = new Date(article.datePublished).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+const modified = new Date(article.dateModified).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+const related = [
+  ...articles.filter((item) => item.slug !== article.slug && item.category === article.category),
+  ...articles.filter((item) => item.slug !== article.slug && item.category !== article.category),
+].slice(0, 3);
+const tags = article.keywords.slice(0, 6);
+const path = `/blog/${article.slug}`;
+const shortenMeta = (value: string, maxLength: number) => {
+  if (value.length <= maxLength) return value;
+  const trimmed = value.slice(0, maxLength - 3).replace(/\s+\S*$/, "");
+  return `${trimmed}...`;
+};
+const articleSeoTitle = shortenMeta(`${article.title} | FillWords Guide`, 58);
+const articleMetaDescription = shortenMeta(article.description, 152);
+const articleHeading = article.title;
+const articleBodyHtml = article.html.replace(/<h2(\s[^>]*)?>/gi, "<h3$1>").replace(/<\/h2>/gi, "</h3>");
+const [contactLocal, contactDomain] = siteConfig.contactEmail.split("@");
+const feedbackSubject = `Comment on: ${article.title}`;
+const articleStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: article.description,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified,
+    author: {
+      "@type": "Person",
+      name: "FillWords Team",
+      jobTitle: "Word Puzzle Editors",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.publisherName,
+      url: siteConfig.siteUrl,
+    },
+    mainEntityOfPage: `${siteConfig.siteUrl}${path}`,
+    keywords: article.keywords.join(", "),
+  },
+];
+---
+
+<BaseLayout
+  title={article.title}
+  description={article.description}
+  seo={{ title: article.title, seoTitle: articleSeoTitle, description: articleMetaDescription, keywords: article.keywords, schemaType: "Article", path }}
+  structuredData={articleStructuredData}
+>
+  <article class="blog-article">
+    <header class="blog-article-header">
+      <nav class="crumbs"><a href="/blog/">Blog</a><span>/</span><span>{article.category}</span></nav>
+      <div class="blog-article-kicker">
+        <span>{article.category}</span>
+        <time datetime={article.datePublished}>{published}</time>
+        <span>{article.readTime}</span>
+      </div>
+      <h1>{articleHeading}</h1>
+      <p>{article.description}</p>
+      <div class="author-byline">
+        <strong>By FillWords Team</strong>
+        <span>Updated {modified}</span>
+      </div>
+    </header>
+
+    <div class="blog-article-shell">
+      <main class="blog-article-main">
+        <h2 class="sr-only">{articleHeading} guide sections</h2>
+        <section class="article-plain-summary" aria-label="Quick summary">
+          <p>
+            <strong>Quick summary.</strong>
+            This guide gives clear word puzzle advice in plain steps. Try one idea at a time while you play, then return to the grid with a calmer scan pattern and a sharper eye for letter paths.
+          </p>
+        </section>
+        <div class="article-content" set:html={articleBodyHtml} />
+
+        <section class="article-tags-box" aria-label="Article tags">
+          <span class="article-tags-label">Filed under:</span>
+          <a class="article-tag article-tag-category" href="/blog/">{article.category}</a>
+          {tags.map((tag) => <span class="article-tag">{tag}</span>)}
+        </section>
+
+        <section class="star-rating-box" data-rating-box>
+          <p class="star-rating-label">Was this article helpful?</p>
+          <div class="star-rating-stars" role="group" aria-label="Rate this article">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button class="star-btn" type="button" data-star={star} aria-label={`Rate ${star} out of 5`}>
+                &#9733;
+              </button>
+            ))}
+          </div>
+          <p class="star-rating-hint" data-rating-hint>Choose a rating</p>
+        </section>
+
+        <section class="comment-box">
+          <div>
+            <p class="comment-label">Comments & feedback</p>
+            <h3>Have a note about this guide?</h3>
+            <p>Send a correction, question, or word puzzle tip. We read feedback and use it to improve future updates.</p>
+          </div>
+          <a
+            class="secondary-action"
+            href="/contact/"
+            data-email-action
+            data-email-local={contactLocal}
+            data-email-domain={contactDomain}
+            data-email-subject={feedbackSubject}
+          >
+            Email a comment
+          </a>
+        </section>
+
+        <section class="author-bio-box">
+          <div class="author-bio-avatar">FW</div>
+          <div class="author-bio-content">
+            <p class="author-bio-name">FillWords Team</p>
+            <p class="author-bio-title">Word Puzzle Editors</p>
+            <p class="author-bio-text">
+              The FillWords editorial team writes about word puzzle strategy, vocabulary practice, family play, and browser game design.
+            </p>
+          </div>
+        </section>
+
+        {related.length > 0 && (
+          <nav class="related-articles" aria-label="Continue reading">
+            <h3>Read next</h3>
+            <div>
+              {related.map((item) => (
+                <a href={`/blog/${item.slug}/`}>
+                  <span>{item.category}</span>
+                  <strong>{item.title}</strong>
+                  <small>{item.readTime}</small>
+                </a>
+              ))}
+            </div>
+          </nav>
+        )}
+      </main>
+
+      <aside class="blog-article-aside" aria-label="Article tools">
+        <div class="article-side-card">
+          <p>Details</p>
+          <dl>
+            <div><dt>Category</dt><dd>{article.category}</dd></div>
+            <div><dt>Read time</dt><dd>{article.readTime}</dd></div>
+            <div><dt>Updated</dt><dd>{modified}</dd></div>
+          </dl>
+          <a class="article-side-link" href="/play/">Play FillWords</a>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  <script is:inline>
+    (() => {
+      document.querySelectorAll("[data-email-action]").forEach((link) => {
+        const local = link.dataset.emailLocal;
+        const domain = link.dataset.emailDomain;
+        const subject = link.dataset.emailSubject || "FillWords feedback";
+        if (local && domain) {
+          const protocol = ["mai", "lto:"].join("");
+          const at = String.fromCharCode(64);
+          link.setAttribute("href", `${protocol}${local}${at}${domain}?subject=${encodeURIComponent(subject)}`);
+        }
+      });
+
+      document.querySelectorAll("[data-rating-box]").forEach((box) => {
+        const buttons = [...box.querySelectorAll("[data-star]")];
+        const hint = box.querySelector("[data-rating-hint]");
+        const labels = ["", "Poor", "Fair", "Good", "Very good", "Excellent"];
+        const paint = (value) => {
+          buttons.forEach((button) => button.classList.toggle("active", Number(button.dataset.star) <= value));
+        };
+        buttons.forEach((button) => {
+          const value = Number(button.dataset.star);
+          button.addEventListener("mouseenter", () => {
+            paint(value);
+            if (hint) hint.textContent = labels[value];
+          });
+          button.addEventListener("mouseleave", () => {
+            if (!box.dataset.selected) {
+              paint(0);
+              if (hint) hint.textContent = "Choose a rating";
+            }
+          });
+          button.addEventListener("click", () => {
+            box.dataset.selected = String(value);
+            paint(value);
+            if (hint) hint.textContent = `Thanks for rating this article ${value} out of 5.`;
+          });
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

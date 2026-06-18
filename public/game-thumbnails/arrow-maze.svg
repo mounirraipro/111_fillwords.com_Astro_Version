@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Arrow maze puzzle thumbnail">
+  <rect width="640" height="460" fill="#ecf6ff"/>
+  <g fill="none" stroke="#0c2430" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 90h416v280H112z"/>
+    <path d="M112 184h154v92h152"/>
+    <path d="M266 90v94M418 276v94"/>
+  </g>
+  <g fill="#0e7490">
+    <path d="M178 138h92l-28-28 18-18 60 60-60 60-18-18 28-28h-92z"/>
+    <path d="M358 214h92l-28-28 18-18 60 60-60 60-18-18 28-28h-92z"/>
+  </g>
+  <circle cx="112" cy="90" r="26" fill="#ffd84d" stroke="#0c2430" stroke-width="8"/>
+  <circle cx="528" cy="370" r="26" fill="#ef4444" stroke="#0c2430" stroke-width="8"/>
+</svg>

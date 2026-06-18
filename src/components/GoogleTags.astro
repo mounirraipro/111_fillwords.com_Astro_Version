@@ -1,0 +1,65 @@
+---
+type Props = {
+  gaMeasurementId?: string;
+  gtmId?: string;
+  placement?: "head" | "body";
+  usePartytown?: boolean;
+};
+
+const {
+  gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID,
+  gtmId = import.meta.env.PUBLIC_GTM_ID || "GTM-M43CQFXB",
+  placement = "head",
+  usePartytown = true,
+} = Astro.props;
+
+const gaScriptType = usePartytown ? "text/partytown" : "text/javascript";
+const gtmHeadSnippet = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${gtmId}');`;
+---
+
+{
+  placement === "head" && gaMeasurementId && (
+    <>
+      <script
+        is:inline
+        type={gaScriptType}
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+      ></script>
+      <script
+        type={gaScriptType}
+        define:vars={{ gaMeasurementId }}
+        is:inline
+      >
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){window.dataLayer.push(arguments);}
+        gtag("js", new Date());
+        gtag("config", gaMeasurementId);
+      </script>
+    </>
+  )
+}
+
+{
+  placement === "head" && gtmId && (
+    <script is:inline set:html={gtmHeadSnippet}></script>
+  )
+}
+
+{
+  placement === "body" && gtmId && (
+    <noscript>
+      <iframe
+        class="gtm-noscript-frame"
+        src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      ></iframe>
+    </noscript>
+  )
+}

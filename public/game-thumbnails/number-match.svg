@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Number matching puzzle thumbnail">
+  <rect width="640" height="460" fill="#fff6d8"/>
+  <g transform="translate(94 58)" stroke="#0c2430" stroke-width="8" font-family="Arial, sans-serif" font-weight="900" font-size="54" text-anchor="middle">
+    <rect x="0" y="0" width="124" height="124" rx="22" fill="#ffffff"/><text x="62" y="78" fill="#0e7490">8</text>
+    <rect x="164" y="0" width="124" height="124" rx="22" fill="#ffffff"/><text x="226" y="78" fill="#ef4444">3</text>
+    <rect x="328" y="0" width="124" height="124" rx="22" fill="#ffffff"/><text x="390" y="78" fill="#14b8a6">8</text>
+    <rect x="0" y="164" width="124" height="124" rx="22" fill="#ffffff"/><text x="62" y="242" fill="#ffd84d">5</text>
+    <rect x="164" y="164" width="124" height="124" rx="22" fill="#ffffff"/><text x="226" y="242" fill="#0e7490">5</text>
+    <rect x="328" y="164" width="124" height="124" rx="22" fill="#ffffff"/><text x="390" y="242" fill="#6d5dfc">3</text>
+  </g>
+  <path d="M156 120C210 176 374 176 484 120M156 284c76 58 224 58 390 0" fill="none" stroke="#0c2430" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 28"/>
+</svg>

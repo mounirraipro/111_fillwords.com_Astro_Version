@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Hex sorting puzzle thumbnail">
+  <rect width="640" height="460" fill="#edf6f6"/>
+  <g transform="translate(122 52)" stroke="#0c2430" stroke-width="8">
+    <path d="M70 0 140 40v80l-70 40-70-40V40z" fill="#ffd84d"/>
+    <path d="M212 0 282 40v80l-70 40-70-40V40z" fill="#14b8a6"/>
+    <path d="M354 0 424 40v80l-70 40-70-40V40z" fill="#0e7490"/>
+    <path d="M141 124 211 164v80l-70 40-70-40v-80z" fill="#ef4444"/>
+    <path d="M283 124 353 164v80l-70 40-70-40v-80z" fill="#ffd84d"/>
+    <path d="M70 248 140 288v80l-70 40-70-40v-80z" fill="#6d5dfc"/>
+    <path d="M212 248 282 288v80l-70 40-70-40v-80z" fill="#14b8a6"/>
+    <path d="M354 248 424 288v80l-70 40-70-40v-80z" fill="#0e7490"/>
+  </g>
+</svg>

@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { articles } from "@/data/articles";
+import { externalGames } from "@/data/externalGames";
+import { withTrailingSlash } from "@/data/seo";
+import { siteRoutes } from "@/data/siteRoutes";
+import { siteConfig } from "@/data/siteConfig";
+
+const sitemapSections = [
+  {
+    title: "Main Pages",
+    links: siteRoutes.map((route) => ({ path: route.path, title: route.title })),
+  },
+  {
+    title: "Blog Articles",
+    links: articles.map((article) => ({ path: `/blog/${article.slug}`, title: article.title })),
+  },
+  {
+    title: "Game Pages",
+    links: externalGames.map((game) => ({ path: `/games/${game.slug}`, title: game.title })),
+  },
+];
+---
+
+<BaseLayout
+  seo={{
+    path: "/sitemap",
+    title: "Sitemap",
+    seoTitle: `${siteConfig.name} Sitemap - All Word Puzzle Pages`,
+    description: `Browse every important ${siteConfig.name} page, including play, games, guides, support, legal information, and word puzzle articles.`,
+    schemaType: "WebPage",
+  }}
+>
+  <section class="mx-auto w-[min(1080px,calc(100%-48px))] py-12 max-sm:w-[calc(100%-28px)]">
+    <p class="mb-6 text-[0.78rem] font-black uppercase tracking-[0.08em] text-game-green after:mt-3.5 after:block after:h-px after:w-10 after:bg-current after:content-['']">Navigation</p>
+    <h1 class="mb-5 max-w-[720px] text-[clamp(2.4rem,6vw,4.4rem)] font-black leading-[0.98] tracking-normal text-ink">Sitemap</h1>
+    <p class="max-w-[760px] text-lg leading-8 text-muted">Browse every public page and article available on {siteConfig.name}. Each link points to a canonical trailing-slash route for direct navigation.</p>
+
+    <div class="mt-10 grid gap-5">
+      {
+        sitemapSections.map((section) => (
+          <section class="rounded-[28px] border border-white/80 bg-white/78 p-5 shadow-[0_18px_50px_rgba(31,44,71,0.08)] backdrop-blur">
+            <div class="mb-4 flex items-end justify-between gap-4 border-b border-line/70 pb-3">
+              <h2 class="text-xl font-black text-ink">{section.title}</h2>
+              <span class="rounded-full bg-soft px-3 py-1 text-xs font-black text-muted">{section.links.length} pages</span>
+            </div>
+            <nav class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3" aria-label={`${section.title} sitemap links`}>
+              {section.links.map((link) => (
+                <a
+                  class="group flex min-h-12 items-center justify-between gap-3 rounded-2xl border border-transparent bg-white px-4 py-3 text-sm font-extrabold text-copy no-underline shadow-[inset_0_-2px_0_rgba(32,184,216,0.12)] transition hover:-translate-y-0.5 hover:border-game-coral/35 hover:text-game-coral hover:shadow-[0_14px_30px_rgba(31,44,71,0.1)]"
+                  href={withTrailingSlash(link.path)}
+                >
+                  <span>{link.title}</span>
+                  <span class="text-game-coral opacity-0 transition group-hover:opacity-100">Open</span>
+                </a>
+              ))}
+            </nav>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

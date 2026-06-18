@@ -1,0 +1,119 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { externalGames } from "@/data/externalGames";
+import { brandAccentClass } from "@/data/accentClasses";
+
+const featuredGames = [
+  {
+    href: "/play/",
+    title: "FillWords Online",
+    shortTitle: "FillWords",
+    category: "Main game",
+    description: "Swipe through letter grids, find hidden words, and clear each themed puzzle.",
+    thumbnail: "/game-thumbs/fillwords-card.svg",
+    accentClass: brandAccentClass,
+  },
+  ...externalGames.slice(0, 3).map((game) => ({
+    href: `/games/${game.slug}/`,
+    title: game.title,
+    shortTitle: game.shortTitle,
+    category: game.category,
+    description: game.description,
+    thumbnail: game.thumbnail,
+    accentClass: game.accentClass,
+  })),
+];
+
+const directoryGames = [
+  {
+    href: "/play/",
+    title: "FillWords Online",
+    shortTitle: "FillWords",
+    category: "Word puzzle",
+    description: "The main FillWords experience with swipe controls, hidden words, and quick vocabulary challenges.",
+    thumbnail: "/game-thumbs/fillwords-card.svg",
+    accentClass: brandAccentClass,
+  },
+  ...externalGames.map((game) => ({
+    href: `/games/${game.slug}/`,
+    title: game.title,
+    shortTitle: game.shortTitle,
+    category: game.category,
+    description: game.description,
+    thumbnail: game.thumbnail,
+    accentClass: game.accentClass,
+  })),
+];
+---
+
+<BaseLayout
+  title="Free Online Games"
+  description="Play FillWords and more free online browser games, including word games, card games, tile puzzles, logic games, number puzzles, and arcade favorites."
+>
+  <section class="games-directory">
+    <header class="games-directory-hero">
+      <div>
+        <h1>Free browser games.</h1>
+        <p>Play FillWords and a focused library of word, logic, card, tile, number, and arcade puzzle games. No downloads, no account setup, just clean browser play.</p>
+      </div>
+      <a class="games-directory-action" href="/play/"><span></span>Play FillWords</a>
+    </header>
+
+    <div class="games-feature-rail" aria-label="Featured games">
+      {featuredGames.map((game, index) => (
+        <a class:list={["games-feature-link", game.accentClass]} href={game.href}>
+          <img src={game.thumbnail} alt={`${game.title} thumbnail`} width="640" height="360" loading="lazy" />
+          <div>
+            <span>{game.category}</span>
+            <strong>{game.shortTitle}</strong>
+          </div>
+          <small>{index === 0 ? "Start here" : "Playgama pick"}</small>
+        </a>
+      ))}
+    </div>
+
+    <section class="games-directory-main" aria-labelledby="games-directory-title">
+      <div class="games-directory-intro">
+        <h2 id="games-directory-title">Choose a game</h2>
+        <p>{directoryGames.length} browser games selected for word-game players, quick breaks, and low-friction play.</p>
+      </div>
+
+      <div class="games-directory-list">
+        {directoryGames.map((game, index) => (
+          <a class:list={["games-directory-row", game.accentClass]} href={game.href}>
+            <span class="games-directory-number">{String(index + 1).padStart(2, "0")}</span>
+            <img src={game.thumbnail} alt={`${game.title} thumbnail`} width="320" height="180" loading="lazy" />
+            <div>
+              <span>{game.category}</span>
+              <h3>{game.title}</h3>
+              <p>{game.description}</p>
+            </div>
+            <span class="games-directory-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+                <path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="games-guide-strip" aria-labelledby="games-library-guide">
+      <h3 id="games-library-guide">Game library guide</h3>
+      <div>
+        <article>
+          <h3>Free browser games in one place</h3>
+          <p>The games library brings together FillWords and a focused set of free online games that work directly in the browser. Players can switch from word grids to card games, tile puzzles, number logic, arcade aiming, or board-clearing puzzles while staying inside the same clean site structure.</p>
+        </article>
+        <article>
+          <h3>How to choose a game</h3>
+          <p>Choose FillWords for hidden-word grids, Word Search for classic vocabulary scanning, Word Solitaire for category logic, Mahjong Connect for tile matching, Sudoku for pure deduction, Bubble Shooter for quick arcade decisions, and Block Puzzle or 2048 for spatial and number planning.</p>
+        </article>
+        <article>
+          <h3>Why no-download play matters</h3>
+          <p>Browser games remove friction. You can open a page, play immediately, and leave without installing software. These pages are built as static Astro routes so every game has a direct URL, a real thumbnail, and supporting guide content.</p>
+        </article>
+      </div>
+    </section>
+  </section>
+</BaseLayout>

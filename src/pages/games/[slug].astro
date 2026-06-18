@@ -1,0 +1,14 @@
+---
+import ExternalGameFrame from "@/components/ExternalGameFrame.astro";
+import { externalGames, getExternalGameBySlug } from "@/data/externalGames";
+
+export const getStaticPaths = () =>
+  externalGames.map((game) => ({
+    params: { slug: game.slug },
+  }));
+
+const game = getExternalGameBySlug(Astro.params.slug ?? "");
+if (!game) throw new Error(`Missing external game: ${Astro.params.slug}`);
+---
+
+<ExternalGameFrame game={game} />

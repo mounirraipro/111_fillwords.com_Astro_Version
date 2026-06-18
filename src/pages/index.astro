@@ -1,0 +1,312 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import GameSideRail from "@/components/GameSideRail.astro";
+import { articles } from "@/data/articles";
+import { leftSideGames, rightSideGames } from "@/data/otherGames";
+import { siteConfig } from "@/data/siteConfig";
+
+const collectionNames = ["Animals", "Nature", "Food", "Technology", "School", "Travel", "Sports", "Home", "Music", "Movies & Books"];
+const faqItems = [
+  ["What is FillWords?", "FillWords is a free browser word puzzle where you swipe through connected letters to find hidden words and clear every letter grid."],
+  ["How do you play FillWords online?", "Choose a puzzle, scan the theme, then drag or swipe through adjacent letters in order. Correct words lock into the board until every word is found."],
+  ["Is FillWords free?", "Yes. FillWords is free to play in a modern browser with no required download or account."],
+  ["Does FillWords work on mobile?", "Yes. FillWords supports touch and mouse play, so it works on phones, tablets, laptops, and desktop browsers."],
+  ["How many puzzles are included?", "The embedded game includes 200 levels across 10 themed collections."],
+];
+
+const recentPosts = articles.slice(0, 3);
+const homeStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    name: "FillWords",
+    alternateName: ["FillWords Online", "Fill Words", "FillWords word puzzle"],
+    url: `${siteConfig.siteUrl}/`,
+    image: new URL(siteConfig.defaultOgImage, siteConfig.siteUrl).href,
+    description: siteConfig.description,
+    applicationCategory: "Game",
+    gamePlatform: ["Web browser", "Desktop", "Mobile", "Tablet"],
+    genre: ["Word puzzle", "Word search", "Letter grid puzzle"],
+    operatingSystem: "Any modern browser",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.publisherName,
+      url: siteConfig.siteUrl,
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(([question, answer]) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answer,
+      },
+    })),
+  },
+];
+---
+
+<BaseLayout title={siteConfig.name} description={siteConfig.description} structuredData={homeStructuredData}>
+  <section class="hero-play">
+    <div class="iframe-showcase">
+      <GameSideRail games={leftSideGames} label="More games on the left" />
+      <div class="hero-game fillwords-hero-frame">
+        <iframe src="/game/index.html" title="Play FillWords" loading="eager"></iframe>
+      </div>
+      <GameSideRail games={rightSideGames} label="More games on the right" />
+    </div>
+
+    <div class="hero-copy">
+      <div class="hero-copy-main">
+        <p class="eyebrow">Instant word play</p>
+        <h1>FillWords Online</h1>
+        <p>Swipe through letter grids to uncover hidden words. Play 200 themed levels in your browser with no install, no account, and a clean full-screen play page when you want more room.</p>
+        <div class="hero-actions">
+          <a class="primary-action" href="/play/"><span class="play-triangle"></span>Play Full Screen</a>
+          <a class="secondary-action" href="/how-to-play/">How To Play</a>
+        </div>
+      </div>
+      <div class="hero-play-panel fillwords-board-card" aria-label="FillWords summary">
+        <div class="hero-panel-top">
+          <span>Ready in browser</span>
+          <strong>Find every hidden word.</strong>
+        </div>
+        <div class="letter-board" aria-hidden="true">
+          {["F", "I", "L", "L", "W", "O", "R", "D", "S", "P", "L", "A", "Y", "N", "O", "W"].map((letter, index) => (
+            <span class:list={[{ active: [0, 1, 2, 3, 4, 5, 6, 7, 8].includes(index) }]}>{letter}</span>
+          ))}
+        </div>
+        <dl class="stat-row">
+          <div><dt>200</dt><dd>Levels</dd></div>
+          <div><dt>10</dt><dd>Themes</dd></div>
+          <div><dt>0</dt><dd>Install</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section home-search-intent">
+    <div class="home-section-head split-head">
+      <div>
+        <p class="eyebrow">How it works</p>
+        <h2>Clear the grid one word at a time.</h2>
+      </div>
+      <p>FillWords blends word search, path tracing, and themed vocabulary into short browser sessions that are easy to start and satisfying to finish.</p>
+    </div>
+    <div class="process-strip">
+      <article><span>01</span><h3>Pick a theme</h3><p>Choose a collection and use the topic as your first clue.</p></article>
+      <article><span>02</span><h3>Scan the board</h3><p>Look for short words, rare letters, and common endings.</p></article>
+      <article><span>03</span><h3>Swipe a path</h3><p>Connect adjacent letters in order with mouse or touch controls.</p></article>
+      <article><span>04</span><h3>Clear every cell</h3><p>Finish when all hidden words are found and the board is complete.</p></article>
+    </div>
+  </section>
+
+  <section class="home-section home-worlds">
+    <div class="home-section-head">
+      <p class="eyebrow">Collections</p>
+      <h3>10 themed word shelves.</h3>
+      <p>Each topic changes the vocabulary and the way you scan the board.</p>
+    </div>
+    <div class="fillwords-topic-grid">
+      {collectionNames.map((name, index) => (
+        <a href="/play/" style={`--topic-index:${index}`}>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong>{name}</strong>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="home-section home-authority">
+    <div class="authority-panel">
+      <div class="home-section-head">
+        <p class="eyebrow">Word puzzle roots</p>
+        <h3>Classic logic, modern swipe controls.</h3>
+        <p>FillWords borrows the scanning discipline of word search and the compact daily rhythm of modern browser games. The result is simple to understand and deep enough to replay.</p>
+      </div>
+      <div class="authority-links" aria-label="Word puzzle references">
+        <a href="https://en.wikipedia.org/wiki/Word_search" target="_blank" rel="noopener noreferrer">
+          <span>Reference</span>
+          <strong>Word search</strong>
+          <small>Hidden-word grids and classic scanning patterns.</small>
+        </a>
+        <a href="https://en.wikipedia.org/wiki/Crossword" target="_blank" rel="noopener noreferrer">
+          <span>Reference</span>
+          <strong>Crossword puzzles</strong>
+          <small>Vocabulary recall and clue-based word play.</small>
+        </a>
+        <a href="/strategy/">
+          <span>Guide</span>
+          <strong>FillWords strategy</strong>
+          <small>Practical ways to find words faster.</small>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section home-blog">
+    <div class="blog-editorial">
+      <div class="home-section-head">
+        <p class="eyebrow">From the blog</p>
+        <h3>Better word puzzle habits.</h3>
+        <p>Short reads for scanning, vocabulary practice, and family play.</p>
+        <a class="text-link" href="/blog/">Browse all articles</a>
+      </div>
+      <div class="blog-board">
+        <a class="editorial-card editorial-card-featured" href={`/blog/${recentPosts[0].slug}/`}>
+          <span>{recentPosts[0].category}</span>
+          <h3>{recentPosts[0].title}</h3>
+          <p>{recentPosts[0].description}</p>
+          <small>{recentPosts[0].readTime}</small>
+        </a>
+        <div class="article-rail">
+          {recentPosts.slice(1).map((post) => (
+            <a class="editorial-card editorial-card-row" href={`/blog/${post.slug}/`}>
+              <span>{post.category}</span>
+              <h3>{post.title}</h3>
+              <small>{post.readTime}</small>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section home-faq">
+    <div class="faq-layout">
+      <div class="faq-cardlet">
+        <p class="eyebrow">FAQ</p>
+        <h3>Quick answers.</h3>
+        <p>Need the short version before playing?</p>
+      </div>
+      <div class="faq-list" data-faq-list>
+        {faqItems.map(([question, answer]) => (
+          <details>
+            <summary>{question}</summary>
+            <p>{answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="home-cta">
+    <div>
+      <p class="eyebrow">Ready?</p>
+      <h3>Open a grid and start finding words.</h3>
+    </div>
+    <a class="primary-action" href="/play/"><span class="play-triangle"></span>Play FillWords</a>
+  </section>
+
+  <script is:inline>
+    (() => {
+      document.querySelectorAll("[data-faq-list]").forEach((list) => {
+        list.querySelectorAll("details").forEach((item) => {
+          item.addEventListener("toggle", () => {
+            if (!item.open) return;
+            list.querySelectorAll("details[open]").forEach((other) => {
+              if (other !== item) other.open = false;
+            });
+          });
+        });
+      });
+    })();
+  </script>
+
+  <style>
+    .fillwords-hero-frame {
+      background: #0f2533;
+    }
+
+    .fillwords-board-card::before {
+      background: #0e7490;
+      box-shadow: 0 12px 0 #084c61, 0 18px 34px rgb(14 116 144 / 0.22);
+    }
+
+    .letter-board {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.5rem;
+      max-width: 300px;
+      margin: 0.5rem 0;
+    }
+
+    .letter-board span {
+      display: grid;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 1px solid rgb(14 116 144 / 0.18);
+      border-radius: 12px;
+      background: #fff;
+      color: #0c2430;
+      font-weight: 950;
+      box-shadow: inset 0 -3px 0 rgb(14 116 144 / 0.08), 0 10px 18px rgb(15 23 42 / 0.08);
+    }
+
+    .letter-board span.active {
+      border-color: rgb(255 216 77 / 0.75);
+      background: #ffd84d;
+      color: #0c3547;
+    }
+
+    .fillwords-topic-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .fillwords-topic-grid a {
+      display: grid;
+      min-height: 132px;
+      align-content: space-between;
+      border: 1px solid var(--color-line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 1rem;
+      color: var(--color-ink);
+      text-decoration: none;
+      box-shadow: 0 14px 34px rgb(15 23 42 / 0.06);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .fillwords-topic-grid a:hover {
+      border-color: rgb(14 116 144 / 0.28);
+      box-shadow: 0 22px 48px rgb(15 23 42 / 0.1);
+      transform: translateY(-4px);
+    }
+
+    .fillwords-topic-grid span {
+      color: var(--color-game-coral);
+      font-size: 0.74rem;
+      font-weight: 950;
+    }
+
+    .fillwords-topic-grid strong {
+      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      line-height: 1.05;
+    }
+
+    @media (max-width: 980px) {
+      .fillwords-topic-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .fillwords-topic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</BaseLayout>

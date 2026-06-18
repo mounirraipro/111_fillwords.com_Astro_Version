@@ -1,0 +1,122 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ContactEmail from "@/components/ContactEmail.astro";
+import { pageContent, type ContentSection, type ContentPage as PageContent, type PageKey } from "@/data/pageContent";
+import { siteConfig } from "@/data/siteConfig";
+
+type Props = {
+  pageKey: PageKey;
+};
+
+const { pageKey } = Astro.props;
+const page = pageContent[pageKey] as PageContent;
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+const extraStructuredData =
+  pageKey === "faq"
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: page.sections.map((section: ContentSection) => ({
+            "@type": "Question",
+            name: section.heading,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: section.body ?? section.items?.join(" ") ?? "",
+            },
+          })),
+        },
+      ]
+    : pageKey === "how-to-play"
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: page.title,
+            description: page.description,
+            step: page.sections.map((section: ContentSection, index: number) => ({
+              "@type": "HowToStep",
+              position: index + 1,
+              name: section.heading,
+              text: section.body ?? section.items?.join(" ") ?? "",
+            })),
+          },
+        ]
+      : [];
+
+const quickLinkClass =
+  "content-page-link";
+const CONTACT_EMAIL_TOKEN = "__CONTACT_EMAIL__";
+const splitContactEmail = (value: string) =>
+  value.split(siteConfig.contactEmail).flatMap((part, index, parts) => (index < parts.length - 1 ? [part, CONTACT_EMAIL_TOKEN] : [part]));
+---
+
+<BaseLayout
+  seo={{
+    title: page.title,
+    description: page.description,
+    seoTitle: page.seoTitle,
+    keywords: page.keywords,
+    schemaType: page.schemaType,
+    updated: page.updated,
+  }}
+  structuredData={extraStructuredData}
+>
+  <article class="content-page">
+    <header class="page-header">
+      <div class="page-header-inner">
+        {page.eyebrow && <p class="eyebrow">{page.eyebrow}</p>}
+        <h1>{page.title}</h1>
+        <p>{page.updated ? `Last updated: ${page.updated}` : page.intro}</p>
+        {page.updated && <p class="page-header-intro">{page.intro}</p>}
+      </div>
+    </header>
+
+    <div class="content-page-shell">
+      <div class="page-content">
+        {page.updated && <p>{page.intro}</p>}
+          {
+            page.sections.map((section: ContentSection, index: number) => (
+              <section id={slugify(section.heading)}>
+                {index === 0 ? <h2>{section.heading}</h2> : <h3>{section.heading}</h3>}
+                {section.body && (
+                  <p>
+                    {splitContactEmail(section.body).map((part) => (part === CONTACT_EMAIL_TOKEN ? <ContactEmail /> : part))}
+                  </p>
+                )}
+                {section.items && (
+                  <ul>
+                    {section.items.map((item: string) => (
+                      <li>{splitContactEmail(item).map((part) => (part === CONTACT_EMAIL_TOKEN ? <ContactEmail /> : part))}</li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))
+          }
+      </div>
+
+      <aside class="content-page-aside" aria-label="Page links">
+        <p>Quick Links</p>
+        <nav>
+          {page.sections.map((section: ContentSection) => <a class={quickLinkClass} href={`#${slugify(section.heading)}`}>{section.heading}</a>)}
+          <a class={quickLinkClass} href="/faq/">FAQ</a>
+          <a class={quickLinkClass} href="/contact/">Contact</a>
+        </nav>
+
+        <div class="content-help-card">
+          <span>?</span>
+          <p>
+            <strong>Need help?</strong>
+            Visit our <a href="/faq/">FAQ</a> or <a href="/contact/">contact</a> support.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

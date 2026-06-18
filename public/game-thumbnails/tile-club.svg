@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Tile matching puzzle thumbnail">
+  <rect width="640" height="460" fill="#f7efe8"/>
+  <g transform="translate(92 72)" stroke="#0c2430" stroke-width="8">
+    <rect x="0" y="0" width="116" height="154" rx="18" fill="#ffffff"/>
+    <rect x="152" y="0" width="116" height="154" rx="18" fill="#ffffff"/>
+    <rect x="304" y="0" width="116" height="154" rx="18" fill="#ffffff"/>
+    <rect x="76" y="184" width="116" height="154" rx="18" fill="#ffffff"/>
+    <rect x="228" y="184" width="116" height="154" rx="18" fill="#ffffff"/>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-width="14">
+    <path d="M132 128h36M150 110v36M284 116c36 18 36 54 0 72M436 116v72M454 116v72" stroke="#0e7490"/>
+    <path d="M202 288h50M354 252l52 72M406 252l-52 72" stroke="#ef4444"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+[variables]
+NIXPACKS_NODE_VERSION = "24"
+NIXPACKS_SPA_OUT_DIR = "dist"
+NPM_CONFIG_PRODUCTION = "false"
+
+[phases.setup]
+nixPkgs = ["...", "caddy"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "caddy run --config Caddyfile --adapter caddyfile"

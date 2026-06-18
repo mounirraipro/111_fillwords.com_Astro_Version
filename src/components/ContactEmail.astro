@@ -1,0 +1,14 @@
+---
+import { siteConfig } from "@/data/siteConfig";
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+const [localPart, domainPart] = siteConfig.contactEmail.split("@");
+---
+
+<span class={className} data-contact-email data-contact-local={localPart} data-contact-domain={domainPart}>
+  <span>{localPart}</span><span aria-hidden="true">@</span><span>{domainPart}</span>
+</span>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Word grid puzzle thumbnail">
+  <rect width="640" height="460" fill="#eef7f0"/>
+  <g transform="translate(104 48)" fill="#ffffff" stroke="#0c2430" stroke-width="8">
+    <rect x="0" y="0" width="86" height="86" rx="16"/><rect x="108" y="0" width="86" height="86" rx="16"/><rect x="216" y="0" width="86" height="86" rx="16"/><rect x="324" y="0" width="86" height="86" rx="16"/>
+    <rect x="0" y="108" width="86" height="86" rx="16"/><rect x="108" y="108" width="86" height="86" rx="16"/><rect x="216" y="108" width="86" height="86" rx="16"/><rect x="324" y="108" width="86" height="86" rx="16"/>
+    <rect x="0" y="216" width="86" height="86" rx="16"/><rect x="108" y="216" width="86" height="86" rx="16"/><rect x="216" y="216" width="86" height="86" rx="16"/><rect x="324" y="216" width="86" height="86" rx="16"/>
+  </g>
+  <g transform="translate(104 48)" fill="#0c2430" font-family="Arial, sans-serif" font-size="46" font-weight="900" text-anchor="middle">
+    <text x="43" y="58">W</text><text x="151" y="58">O</text><text x="259" y="58">R</text><text x="367" y="58">D</text>
+    <text x="43" y="166">P</text><text x="151" y="166">L</text><text x="259" y="166">A</text><text x="367" y="166">Y</text>
+    <text x="43" y="274">F</text><text x="151" y="274">I</text><text x="259" y="274">N</text><text x="367" y="274">D</text>
+  </g>
+  <rect x="104" y="48" width="410" height="86" rx="16" fill="#ffd84d" opacity="0.28"/>
+</svg>

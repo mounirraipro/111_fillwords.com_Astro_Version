@@ -1,0 +1,28 @@
+---
+type Props = {
+  gaMeasurementId?: string;
+};
+
+const gaMeasurementId = Astro.props.gaMeasurementId ?? import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+---
+
+{
+  gaMeasurementId && (
+    <amp-analytics type="gtag" data-credentials="include">
+      <script
+        is:inline
+        type="application/json"
+        set:html={JSON.stringify({
+          vars: {
+            gtag_id: gaMeasurementId,
+            config: {
+              [gaMeasurementId]: {
+                groups: "default",
+              },
+            },
+          },
+        })}
+      ></script>
+    </amp-analytics>
+  )
+}

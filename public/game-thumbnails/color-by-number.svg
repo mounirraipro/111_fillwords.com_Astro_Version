@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Color by number thumbnail">
+  <rect width="640" height="460" fill="#fff1f5"/>
+  <g transform="translate(98 58)" stroke="#ffffff" stroke-width="5">
+    <rect x="0" y="0" width="74" height="74" fill="#ffd84d"/><rect x="74" y="0" width="74" height="74" fill="#14b8a6"/><rect x="148" y="0" width="74" height="74" fill="#0e7490"/><rect x="222" y="0" width="74" height="74" fill="#ef4444"/><rect x="296" y="0" width="74" height="74" fill="#6d5dfc"/>
+    <rect x="0" y="74" width="74" height="74" fill="#14b8a6"/><rect x="74" y="74" width="74" height="74" fill="#0e7490"/><rect x="148" y="74" width="74" height="74" fill="#ffffff"/><rect x="222" y="74" width="74" height="74" fill="#ffd84d"/><rect x="296" y="74" width="74" height="74" fill="#ef4444"/>
+    <rect x="0" y="148" width="74" height="74" fill="#0e7490"/><rect x="74" y="148" width="74" height="74" fill="#ffffff"/><rect x="148" y="148" width="74" height="74" fill="#ffd84d"/><rect x="222" y="148" width="74" height="74" fill="#14b8a6"/><rect x="296" y="148" width="74" height="74" fill="#6d5dfc"/>
+    <rect x="0" y="222" width="74" height="74" fill="#ef4444"/><rect x="74" y="222" width="74" height="74" fill="#ffd84d"/><rect x="148" y="222" width="74" height="74" fill="#14b8a6"/><rect x="222" y="222" width="74" height="74" fill="#ffffff"/><rect x="296" y="222" width="74" height="74" fill="#0e7490"/>
+  </g>
+  <g fill="#0c2430" font-family="Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">
+    <text x="209" y="116">1</text><text x="357" y="190">2</text><text x="135" y="264">3</text><text x="357" y="338">4</text>
+  </g>
+</svg>

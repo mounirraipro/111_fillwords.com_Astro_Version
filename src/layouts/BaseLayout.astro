@@ -1,0 +1,225 @@
+---
+import "@/styles/global.css";
+import GoogleTags from "@/components/GoogleTags.astro";
+import { siteConfig } from "@/data/siteConfig";
+import { siteRoutes } from "@/data/siteRoutes";
+import { buildJsonLd, buildPageTitle, getCanonicalUrl, getSeoForPath, withTrailingSlash, type SeoPage } from "@/data/seo";
+
+type Props = {
+  title?: string;
+  description?: string;
+  seo?: Partial<SeoPage>;
+  structuredData?: unknown[];
+};
+
+const { title, description, seo = {}, structuredData = [] } = Astro.props;
+
+const pathname = Astro.url.pathname;
+const routeSeo = getSeoForPath(pathname);
+const pageSeo = {
+  ...routeSeo,
+  ...seo,
+  title: seo.title ?? title ?? routeSeo.title,
+  description: seo.description ?? description ?? routeSeo.description,
+  keywords: [...(routeSeo.keywords ?? []), ...(seo.keywords ?? [])],
+};
+const improveMetaDescription = (value: string) => {
+  const clean = value.trim();
+  const expanded =
+    clean.length >= 110
+      ? clean
+      : `${clean} Play online free with browser word grids, swipe controls, themed levels, and quick vocabulary challenges.`;
+  if (expanded.length <= 145) return expanded;
+  return `${expanded.slice(0, 142).replace(/\s+\S*$/, "")}...`;
+};
+pageSeo.description = improveMetaDescription(pageSeo.description);
+const origin = Astro.site?.origin ?? siteConfig.siteUrl;
+const canonicalUrl = getCanonicalUrl(pageSeo.path ?? pathname, origin);
+const pageTitle = buildPageTitle(pageSeo);
+const robots = pageSeo.noIndex ? "noindex,nofollow" : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1";
+const ogImage = new URL(siteConfig.defaultOgImage, origin).href;
+const jsonLd = [...buildJsonLd(pageSeo, canonicalUrl), ...structuredData];
+const islandLinks = siteRoutes.filter((route) => ["/play", "/games", "/how-to-play", "/strategy", "/blog"].includes(route.path));
+const menuLinks = siteRoutes.filter((route) => ["/play", "/games", "/how-to-play", "/strategy", "/difficulty-guide", "/game-mechanics", "/blog", "/parents", "/faq", "/contact"].includes(route.path));
+const legalLinks = siteRoutes.filter((route) => route.group === "legal");
+const supportLinks = siteRoutes.filter((route) => ["/faq", "/contact", "/about", "/accessibility"].includes(route.path));
+const isActive = (path: string) => (path === "/" ? pathname === "/" : pathname.startsWith(path));
+const footerLinkClass = "text-[0.92rem] font-medium text-muted no-underline transition-colors hover:text-game-green-dark";
+const routeHref = (path: string) => withTrailingSlash(path);
+---
+
+<!doctype html>
+<html lang={siteConfig.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <GoogleTags placement="head" usePartytown={false} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageSeo.description} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content={siteConfig.themeColor} />
+    <meta name="application-name" content={siteConfig.name} />
+    <meta name="generator" content="Astro" />
+    {siteConfig.emitMetaKeywords && pageSeo.keywords?.length && <meta name="keywords" content={[...new Set(pageSeo.keywords)].join(", ")} />}
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon-96x96.png" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:type" content={pageSeo.schemaType === "Article" || pageSeo.schemaType === "Blog" ? "article" : "website"} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageSeo.description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={siteConfig.locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageSeo.description} />
+    <meta name="twitter:image" content={ogImage} />
+    {siteConfig.socialHandle && <meta name="twitter:site" content={siteConfig.socialHandle} />}
+    {jsonLd.map((schema) => <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+  </head>
+  <body class="min-h-screen bg-white text-copy antialiased">
+    <GoogleTags placement="body" />
+    <a
+      class="fixed left-3 top-3 z-[100] -translate-y-24 rounded-lg bg-ink px-4 py-2.5 text-sm font-extrabold text-white no-underline transition focus:translate-y-0"
+      href="#main-content"
+    >
+      Skip to content
+    </a>
+    <header class="site-header">
+      <div class="nav-island" data-nav-root>
+        <a class="brand-mark" href="/" aria-label={`${siteConfig.name} home`}>
+          <span class="brand-gem">F</span>
+          <span>{siteConfig.name}</span>
+        </a>
+
+        <nav class="nav-pill-links" aria-label="Primary navigation">
+          {islandLinks.map((route) => <a href={routeHref(route.path)} aria-current={isActive(route.path) ? "page" : undefined}>{route.title}</a>)}
+        </nav>
+
+        <div class="nav-actions">
+          <a class="nav-play" href="/play/"><span></span>Play</a>
+          <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="site-menu" aria-expanded="false" data-menu-toggle>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="fullscreen-menu" id="site-menu" aria-hidden="true" data-menu>
+        <div class="menu-panel">
+          <div class="menu-topline">
+            <a class="brand-mark" href="/" aria-label={`${siteConfig.name} home`}>
+              <span class="brand-gem">F</span>
+              <span>{siteConfig.name}</span>
+            </a>
+            <button class="menu-close" type="button" aria-label="Close menu" data-menu-close>Close</button>
+          </div>
+          <nav class="menu-link-grid" aria-label="Full menu">
+            {menuLinks.map((route, index) => (
+              <a href={routeHref(route.path)} aria-current={isActive(route.path) ? "page" : undefined}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{route.title}</strong>
+              </a>
+            ))}
+          </nav>
+          <div class="menu-bottom">
+            <p>Swipe letters. Find words. Clear the grid.</p>
+            <a href="/play/">Start playing</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="min-h-[72vh]">
+      <slot />
+    </main>
+
+    <footer class="border-t border-line-strong bg-white">
+      <div class="mx-auto grid w-[min(1120px,calc(100%-48px))] grid-cols-[minmax(240px,1.3fr)_repeat(4,minmax(120px,0.72fr))_minmax(220px,1fr)] gap-8 py-8 max-lg:grid-cols-3 max-sm:w-[calc(100%-28px)] max-sm:grid-cols-2">
+        <div class="max-sm:col-span-2">
+          <a class="mb-4 inline-flex w-fit items-center gap-3 text-ink no-underline" href="/" aria-label={`${siteConfig.name} home`}>
+            <span class="grid size-8 rotate-[30deg] place-items-center rounded-[10px] bg-game-green text-base font-black leading-none text-white">
+              <span class="-rotate-[30deg]">F</span>
+            </span>
+            <span class="text-[1.08rem] font-black leading-none">{siteConfig.name}</span>
+          </a>
+          <p class="max-w-64 text-sm leading-6 text-muted">{siteConfig.tagline}</p>
+        </div>
+
+        <nav aria-label="Play links">
+          <p class="mb-3 text-[0.72rem] font-black uppercase tracking-[0.1em] text-ink">Play</p>
+          <div class="grid gap-2.5">
+            <a class={footerLinkClass} href="/play/">Play Now</a>
+            <a class={footerLinkClass} href="/games/">Games</a>
+            <a class={footerLinkClass} href="/how-to-play/">How To Play</a>
+            <a class={footerLinkClass} href="/strategy/">Strategy</a>
+          </div>
+        </nav>
+
+        <nav aria-label="Community links">
+          <p class="mb-3 text-[0.72rem] font-black uppercase tracking-[0.1em] text-ink">Community</p>
+          <div class="grid gap-2.5">
+            <a class={footerLinkClass} href="/blog/">Blog</a>
+            <a class={footerLinkClass} href="/parents/">Parents</a>
+            <a class={footerLinkClass} href="/sitemap/">Sitemap</a>
+          </div>
+        </nav>
+
+        <nav aria-label="Support links">
+          <p class="mb-3 text-[0.72rem] font-black uppercase tracking-[0.1em] text-ink">Support</p>
+          <div class="grid gap-2.5">
+            {supportLinks.map((route) => <a class={footerLinkClass} href={routeHref(route.path)}>{route.title}</a>)}
+          </div>
+        </nav>
+
+        <nav aria-label="Legal links">
+          <p class="mb-3 text-[0.72rem] font-black uppercase tracking-[0.1em] text-ink">Legal</p>
+          <div class="grid gap-2.5">
+            {legalLinks.map((route) => <a class={footerLinkClass} href={routeHref(route.path)}>{route.title}</a>)}
+          </div>
+        </nav>
+
+        <form class="border-l border-line pl-8 max-lg:border-l-0 max-lg:pl-0 max-sm:col-span-2" action="/contact/" method="get">
+          <p class="mb-3 text-[0.72rem] font-black uppercase tracking-[0.1em] text-ink">Stay Updated</p>
+          <p class="mb-3 text-[0.84rem] leading-5 text-muted">Get notes about new word puzzles, guides, and site updates.</p>
+          <div class="grid h-10 grid-cols-[minmax(0,1fr)_40px] overflow-hidden rounded-[7px] border border-line-strong bg-white">
+            <input class="min-w-0 border-0 px-3 text-[0.84rem] text-muted outline-none" type="email" name="email" placeholder="Enter your email" aria-label="Email address" />
+            <button class="border-0 bg-game-green text-lg font-black text-white" type="submit" aria-label="Submit email">+</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="mx-auto flex w-[min(1120px,calc(100%-48px))] justify-between gap-5 border-t border-line py-4 text-xs text-quiet max-sm:w-[calc(100%-28px)] max-sm:flex-col">
+        <span>&copy; 2026 {siteConfig.name}. All rights reserved.</span>
+        <span class="flex gap-6">
+          <a class="transition hover:text-game-green-dark" href="/accessibility/">Accessibility</a>
+          <a class="transition hover:text-game-green-dark" href="/sitemap/">Sitemap</a>
+        </span>
+      </div>
+    </footer>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const menu = document.querySelector("[data-menu]");
+        const toggle = document.querySelector("[data-menu-toggle]");
+        const close = document.querySelector("[data-menu-close]");
+        const links = menu?.querySelectorAll("a") ?? [];
+        const setOpen = (open) => {
+          root.classList.toggle("menu-open", open);
+          menu?.setAttribute("aria-hidden", String(!open));
+          toggle?.setAttribute("aria-expanded", String(open));
+          toggle?.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        };
+        toggle?.addEventListener("click", () => setOpen(!root.classList.contains("menu-open")));
+        close?.addEventListener("click", () => setOpen(false));
+        links.forEach((link) => link.addEventListener("click", () => setOpen(false)));
+        window.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") setOpen(false);
+        });
+      })();
+    </script>
+  </body>
+</html>

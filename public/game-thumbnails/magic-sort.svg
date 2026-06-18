@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Color sorting puzzle thumbnail">
+  <rect width="640" height="460" fill="#dff7fb"/>
+  <rect x="0" y="300" width="640" height="160" fill="#c6ecf2"/>
+  <g transform="translate(92 64)">
+    <rect x="0" y="0" width="82" height="300" rx="34" fill="#ffffff" stroke="#0c2430" stroke-width="10"/>
+    <rect x="18" y="196" width="46" height="70" rx="22" fill="#ffd84d"/>
+    <rect x="18" y="118" width="46" height="70" rx="22" fill="#14b8a6"/>
+    <rect x="18" y="40" width="46" height="70" rx="22" fill="#0e7490"/>
+  </g>
+  <g transform="translate(282 64)">
+    <rect x="0" y="0" width="82" height="300" rx="34" fill="#ffffff" stroke="#0c2430" stroke-width="10"/>
+    <rect x="18" y="196" width="46" height="70" rx="22" fill="#ef4444"/>
+    <rect x="18" y="118" width="46" height="70" rx="22" fill="#ffd84d"/>
+    <rect x="18" y="40" width="46" height="70" rx="22" fill="#14b8a6"/>
+  </g>
+  <g transform="translate(472 64)">
+    <rect x="0" y="0" width="82" height="300" rx="34" fill="#ffffff" stroke="#0c2430" stroke-width="10"/>
+    <rect x="18" y="196" width="46" height="70" rx="22" fill="#0e7490"/>
+    <rect x="18" y="118" width="46" height="70" rx="22" fill="#ef4444"/>
+    <rect x="18" y="40" width="46" height="70" rx="22" fill="#ffd84d"/>
+  </g>
+</svg>

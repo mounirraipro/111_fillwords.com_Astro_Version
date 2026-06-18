@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>FillWords</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="game.css">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Background Decor (Matches Dark Ocean Theme) -->
+    <div id="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="screen active">
+
+      <!-- Centered hero content -->
+      <div class="menu-center">
+
+        <!-- Brand -->
+        <div class="menu-brand">
+          <div class="menu-brand-icon">F</div>
+          <h1 class="menu-brand-title">FillWords</h1>
+          <p class="menu-brand-sub">Daily word puzzles</p>
+        </div>
+
+        <!-- Hero Play Button (POTD) -->
+        <button class="menu-play-btn" id="potd-play-btn">
+          <span class="menu-play-label" id="potd-title">Play</span>
+          <span class="menu-play-meta" id="potd-meta"></span>
+        </button>
+
+        <!-- Mini stats -->
+        <div class="menu-stats">
+          <div class="menu-stat"><span class="menu-stat-val" id="stat-levels">0</span> played</div>
+          <div class="menu-stat-dot"></div>
+          <div class="menu-stat"><span class="menu-stat-val" id="stat-words">0</span> words</div>
+          <div class="menu-stat-dot"></div>
+          <div class="menu-stat"><span class="menu-stat-val" id="stat-streak">0</span> streak</div>
+        </div>
+
+        <button id="open-collection-shelf" class="menu-secondary-btn">Collection Shelf</button>
+
+        <!-- Divider -->
+        <div class="menu-divider">
+          <span class="menu-divider-line"></span>
+          <span class="menu-divider-text">or browse categories</span>
+          <span class="menu-divider-line"></span>
+        </div>
+
+        <!-- Categories (inside center block now) -->
+        <div id="category-grid" class="menu-cats"></div>
+
+      </div>
+
+    </div>
+
+    <div id="collection-screen" class="screen">
+      <div class="screen-topbar">
+        <button id="back-from-collections" class="back-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Menu
+        </button>
+      </div>
+      <div class="level-screen-header">
+        <h2>Collection Shelf</h2>
+        <p class="level-cat-desc">Browse every mastered and perfected set</p>
+      </div>
+      <div id="collection-grid" class="collection-grid"></div>
+    </div>
+
+    <!-- Level Select -->
+    <div id="level-screen" class="screen">
+      <div class="screen-topbar">
+        <button id="back-to-menu" class="back-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          Categories
+        </button>
+      </div>
+      <div class="level-screen-header">
+        <h2 id="level-cat-name"></h2>
+        <p id="level-cat-desc" class="level-cat-desc">Select a puzzle size</p>
+        <div id="level-cat-mastery" class="level-cat-mastery"></div>
+      </div>
+      <div id="level-grid" class="level-grid"></div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+      <div class="game-toolbar">
+        <button id="back-to-levels" class="back-btn" aria-label="Back to levels">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          Back
+        </button>
+        <div class="game-info">
+          <span id="game-level-title" class="game-level-title"></span>
+          <span id="game-level-best" class="game-level-best"></span>
+        </div>
+        <button id="sound-toggle-game" class="sound-toggle icon-only" aria-label="Toggle sound">
+          <svg id="sound-icon-game" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="game-layout">
+        <!-- The Words to Find (Top Tray) -->
+        <div class="word-list-panel">
+          <div id="word-list"></div>
+        </div>
+
+        <!-- The Word Search Board -->
+        <div class="board-panel">
+          <div id="board-container">
+            <!-- SVG overlay for drawing swipe lines -->
+            <svg id="swipe-overlay"></svg>
+            <!-- Div grid for letters -->
+            <div id="letter-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tutorial Overlay -->
+      <div id="game-tutorial" style="display: none;">
+        <div class="tutorial-text" id="tutorial-text">Swipe to connect words!</div>
+        <svg class="tutorial-hand" id="tutorial-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+          <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+          <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+          <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15">
+          </path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="win-screen" class="screen">
+      <div class="win-content">
+        <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+        <div class="win-check">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="28" fill="#FFD70022" stroke="#FFD700" stroke-width="2.5" />
+            <path d="M18 30L26 38L42 22" stroke="#0e7490" stroke-width="3.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="win-title">Level Complete!</div>
+        <div id="win-stars" class="win-stars" aria-label="Level stars"></div>
+        <div id="win-record-note" class="win-record-note">Great solve!</div>
+        <div class="win-stats">
+          <span id="win-words-found" class="win-stat-value">0</span> words found
+        </div>
+        <div class="win-summary-grid">
+          <div class="win-summary-card"><span class="win-summary-label">Time</span><span id="win-time" class="win-summary-value">0:00</span></div>
+          <div class="win-summary-card"><span class="win-summary-label">Mistakes</span><span id="win-mistakes" class="win-summary-value">0</span></div>
+          <div class="win-summary-card"><span class="win-summary-label">Hints</span><span id="win-hints" class="win-summary-value">0</span></div>
+          <div class="win-summary-card"><span class="win-summary-label">Best Time</span><span id="win-best-time" class="win-summary-value">0:00</span></div>
+        </div>
+        <div id="win-collection-note" class="win-collection-note"></div>
+        <div id="win-replay-prompt" class="win-replay-prompt">Beat your best next run.</div>
+        <div class="win-actions">
+          <button id="next-level" class="btn-game btn-primary-game">Next Level</button>
+          <button id="play-again" class="btn-game btn-outline-game">Play Again</button>
+          <button id="back-to-menu-win" class="btn-game btn-outline-game">Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script type="module" src="game.js"></script>
+</body>
+
+</html>

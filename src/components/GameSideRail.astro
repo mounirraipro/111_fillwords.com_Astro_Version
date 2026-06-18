@@ -1,0 +1,33 @@
+---
+import type { SideGame } from "@/data/otherGames";
+
+type Props = {
+  games: SideGame[];
+  label: string;
+};
+
+const { games, label } = Astro.props;
+---
+
+<aside class="side-game-rail" aria-label={label}>
+  {games.map((game) => (
+    <a
+      class="side-game-card"
+      href={game.href}
+      target={game.href.startsWith("http") ? "_blank" : undefined}
+      rel={game.href.startsWith("http") ? "noopener noreferrer" : undefined}
+      aria-label={`Play ${game.title}`}
+    >
+      <img class="side-game-thumb" src={game.thumbnail} alt="" loading="lazy" decoding="async" />
+      <span class="side-game-mark" aria-hidden="true">{game.initials}</span>
+      <span class="side-game-copy">
+        <strong>{game.title}</strong>
+        <em>{game.note}</em>
+        <span class="side-game-meta">
+          <small>{game.category}</small>
+          <span>Play now</span>
+        </span>
+      </span>
+    </a>
+  ))}
+</aside>
