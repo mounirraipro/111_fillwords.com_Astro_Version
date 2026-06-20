@@ -23,7 +23,7 @@ Set production values in `.env`. `SITE_URL` must be the final public origin so A
 ```bash
 SITE_URL=https://fillwords.com
 PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
-PUBLIC_GTM_ID=GTM-K2WJQ979
+PUBLIC_GTM_ID=GTM-MWPPTTJG
 ```
 
 Customize the game name, description, genre, contact email, policy date, social defaults, and topic keywords in `src/data/siteConfig.ts`.
